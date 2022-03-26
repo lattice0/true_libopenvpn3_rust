@@ -1,0 +1,12 @@
+[package]
+name = "libopenvpn3"
+version = "0.1.0"
+authors = ["Lattice0 <lattice0@protonmail.com>"]
+edition = "2018"
+
+[dependencies]
+libc = "0.2"
+simple_vpn = {git = "https://github.com/lattice0/simple_vpn"}
+
+[build-dependencies]
+cmake = "0.1.44"
