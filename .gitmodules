@@ -1,0 +1,3 @@
+[submodule "src/true_libopenvpn3"]
+	path = src/true_libopenvpn3
+	url = https://github.com/lattice0/true_libopenvpn3
