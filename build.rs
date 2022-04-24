@@ -1,12 +1,31 @@
 extern crate cmake;
 use cmake::Config;
+use std::env;
 
 fn main() {
-    let dst = Config::new("src/true_libopenvpn3")
-        .define("COMPILE_TARGET", "DESKTOP_x86_64")
-        //.define("FLAVOR", "DESKTOP")
-        //.define("LIBOPENVPN3_NOT_BUILD_EXAMPLES", "TRUE")
-        .build();
+    let mut dst = Config::new("src/true_libopenvpn3");
+    //.define("COMPILE_TARGET", "DESKTOP_x86_64")
+    //.define("FLAVOR", "DESKTOP")
+    //.define("LIBOPENVPN3_NOT_BUILD_EXAMPLES", "TRUE")
+    let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
+    let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
+    if target_os=="android" {
+        if target_arch == "x86" {
+            dst.define("ANDROID_ABI", "x86");
+        } else if target_arch == "x86_64" {
+            dst.define("ANDROID_ABI", "x86_64");
+        } else if target_arch == "arm" {
+            //TODO: is armeabi-v7a with NEON needed?
+            dst.define("ANDROID_ABI", "armeabi-v7a");
+        } else if target_arch == "aarch64" {
+            dst.define("ANDROID_ABI", "arm64-v8a");
+        } else {
+            panic!("unsupported target_arch: {:?}", target_arch);
+        }
+    } else {
+        panic!("not android");
+    }
+    let dst = dst.build();
 
     println!("cargo:rustc-link-search=native={}", dst.display());
     println!("cargo:rustc-link-lib=dylib=stdc++");
@@ -18,8 +37,7 @@ fn main() {
     println!("cargo:rustc-link-lib=dylib=lzo2");
     println!("cargo:rustc-link-lib=static=tins");
 
-    #[cfg(target_os="android")]
-    {
+    if cfg!(target_os = "android") {
         println!("cargo:rustc-link-lib=static=crypto");
         println!("cargo:rustc-link-lib=static=lzo");
         println!("cargo:rustc-link-lib=static=lz4");
