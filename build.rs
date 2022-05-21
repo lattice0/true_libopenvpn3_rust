@@ -4,9 +4,7 @@ use std::env;
 
 fn main() {
     let mut dst = Config::new("src/true_libopenvpn3");
-    //.define("COMPILE_TARGET", "DESKTOP_x86_64")
-    //.define("FLAVOR", "DESKTOP")
-    //.define("LIBOPENVPN3_NOT_BUILD_EXAMPLES", "TRUE")
+    
     let target_os = env::var("CARGO_CFG_TARGET_OS").unwrap();
     let target_arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
     if target_os=="android" {
@@ -23,7 +21,7 @@ fn main() {
             panic!("unsupported target_arch: {:?}", target_arch);
         }
     } else {
-        panic!("not android");
+        //panic!("not android");
     }
     let dst = dst.build();
 
