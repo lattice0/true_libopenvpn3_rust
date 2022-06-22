@@ -1,4 +1,3 @@
-extern crate cmake;
 use cmake::Config;
 use std::env;
 
